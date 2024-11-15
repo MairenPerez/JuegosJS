@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>El Ahorcado</title>
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet" type="text/css">
+    <style>
+        * {
+            box-sizing: border-box; 
+        }
+
+        body{
+            background-color: #6527c3;
+            color: aliceblue;
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>El Ahorcado</h1>
+    <p> Encuentra la palabra oculta - Pulsa una letra</p>
+    <div class="game-container">
+        <svg height="250" width="200" class="figure-container">
+            <!-- Rod-->
+             <line x1="60" y1="20" x2="140" y2="20" />
+             <line x1="1400" y1="20" x2="140" y2="50" />
+             <line x1="60" y1="20" x2="60" y2="230" />
+             <line x1="20" y1="230" x2="100" y2="230" />
+
+             <!--Head-->
+             <circle cx="140" cy="70" r="20" class="figure-part" />
+
+             <!--Body-->
+             <line x1="140" y1="90" x2="140" y2="150" class="figure-part" />
+
+             <!--Arms-->
+             <line x1="140" y1="120" x2="120" y2="100" class="figure-part" />
+             <line x1="140" y1="120" x2="160" y2="100" class="figure-part" />
+
+             <!--Legs-->
+             <line x1="140" y1="150" x2="120" y2="180" class="figure-part" />
+             <line x1="140" y1="150" x2="160" y2="180" class="figure-part" />
+        </svg>
+        <div class="wrong-letters-container">
+            <div id="wrong-letters"></div>
+        </div>
+        <div class="word" id="word"></div>
+    </div>
+
+    <!--Container final message-->
+    <div class="popup-container" id="popup-container">
+        <div class="popup">
+            <h2 id="final-message"></h2>
+            <button id="play-button" type="button">Partida Nueva</button>
+        </div>
+    </div>
+
+    <!-- Notification-->
+     <div class="notification-container" id="notification-container">
+        <p>Ya has introducido esta letra</p>
+    </div>
+
+    <script>
+        // Add your JavaScript code here
+    </script>
+</body>
+</html>
