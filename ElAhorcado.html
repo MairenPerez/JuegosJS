@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>El Ahorcado</title>
+    <title>El Ahorcado Mejorado</title>
     <!-- Fuentes de Google -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet"> 
     <!-- Estilos -->
@@ -146,6 +146,31 @@
         .notification-container.show {
             opacity: 1;
         }
+
+        .keyboard {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 5px;
+        }
+
+        .key {
+            background: #5e2b88;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 15px;
+            font-size: 1rem;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        .key.used {
+            background: #ccc;
+            color: #333;
+            cursor: not-allowed;
+        }
     </style>
 </head>
 <body>
@@ -155,16 +180,16 @@
     <div class="game-container">
         <!-- SVG para el ahorcado -->
         <svg height="250" width="200">
-            <line x1="60" y1="20" x2="140" y2="20" />
-            <line x1="140" y1="20" x2="140" y2="50" />
-            <line x1="60" y1="20" x2="60" y2="230" />
-            <line x1="20" y1="230" x2="100" y2="230" />
-            <circle cx="140" cy="70" r="20" class="figure-part" />
-            <line x1="140" y1="90" x2="140" y2="150" class="figure-part" />
-            <line x1="140" y1="120" x2="120" y2="100" class="figure-part" />
-            <line x1="140" y1="120" x2="160" y2="100" class="figure-part" />
-            <line x1="140" y1="150" x2="120" y2="180" class="figure-part" />
-            <line x1="140" y1="150" x2="160" y2="180" class="figure-part" />
+            <line x1="60" y1="20" x2="140" y2="20" stroke="#fff" stroke-width="2"/> <!-- Barra superior -->
+            <line x1="140" y1="20" x2="140" y2="50" stroke="#fff" stroke-width="2"/> <!-- Barra vertical -->
+            <line x1="60" y1="20" x2="60" y2="230" stroke="#fff" stroke-width="2"/> <!-- Barra vertical izquierda -->
+            <line x1="20" y1="230" x2="100" y2="230" stroke="#fff" stroke-width="2"/> <!-- Base -->
+            <circle cx="140" cy="70" r="20" class="figure-part" stroke="#fff" stroke-width="2"/> <!-- Cabeza -->
+            <line x1="140" y1="90" x2="140" y2="150" class="figure-part" stroke="#fff" stroke-width="2"/> <!-- Cuerpo -->
+            <line x1="140" y1="120" x2="120" y2="100" class="figure-part" stroke="#fff" stroke-width="2"/> <!-- Brazo izquierdo -->
+            <line x1="140" y1="120" x2="160" y2="100" class="figure-part" stroke="#fff" stroke-width="2"/> <!-- Brazo derecho -->
+            <line x1="140" y1="150" x2="120" y2="180" class="figure-part" stroke="#fff" stroke-width="2"/> <!-- Pierna izquierda -->
+            <line x1="140" y1="150" x2="160" y2="180" class="figure-part" stroke="#fff" stroke-width="2"/> <!-- Pierna derecha -->
         </svg>
 
         <!-- Letras incorrectas -->
@@ -175,6 +200,11 @@
 
         <!-- Palabra -->
         <div class="word" id="word"></div>
+    </div>
+
+    <!-- Teclado -->
+    <div class="keyboard" id="keyboard">
+        <!-- Las letras se generarán dinámicamente -->
     </div>
 
     <!-- Popup de final -->
@@ -191,7 +221,7 @@
     </div>
 
     <script>
-        const words = ['programacion', 'diseño', 'backend', 'rocknroll', 'bateria', 'deportes'];
+        const words = ['programacion', 'romanticismo', 'backend', 'rocknroll', 'bateria', 'deportes'];
         let selectedWord = words[Math.floor(Math.random() * words.length)];
 
         const correctLetters = [];
@@ -203,6 +233,7 @@
         const playButton = document.getElementById('play-button');
         const notification = document.getElementById('notification-container');
         const figureParts = document.querySelectorAll('.figure-part');
+        const keyboard = document.getElementById('keyboard');
 
         function displayWord() {
             wordE1.innerHTML = selectedWord
@@ -218,46 +249,55 @@
         function updateWrongLetters() {
             wrongLettersE1.innerHTML = wrongLetters.map(letter => `<span>${letter}</span>`).join('');
             figureParts.forEach((part, index) => {
-                if (index < wrongLetters.length) part.style.display = 'block';
-                else part.style.display = 'none';
+                if (index < wrongLetters.length) {
+                    part.style.display = 'block';
+                }
             });
             if (wrongLetters.length === figureParts.length) {
-                finalMessage.innerText = '¡Perdiste! La palabra era: ' + selectedWord;
+                finalMessage.innerText = '¡Perdiste! La palabra era ' + selectedWord;
                 popupContainer.classList.add('active');
             }
         }
 
-        function showNotification() {
-            notification.classList.add('show');
-            setTimeout(() => notification.classList.remove('show'), 2000);
+        function handleKeyPress(event) {
+            const letter = event.key.toLowerCase();
+            if (correctLetters.includes(letter) || wrongLetters.includes(letter)) {
+                // Ya se usó la letra
+                notification.classList.add('show');
+                setTimeout(() => notification.classList.remove('show'), 1500);
+                return;
+            }
+
+            if (selectedWord.includes(letter)) {
+                correctLetters.push(letter);
+                displayWord();
+            } else {
+                wrongLetters.push(letter);
+                updateWrongLetters();
+            }
         }
 
-        window.addEventListener('keydown', e => {
-            const letter = e.key.toLowerCase();
-            if (/^[a-z]$/.test(letter)) {
-                if (selectedWord.includes(letter)) {
-                    if (!correctLetters.includes(letter)) {
-                        correctLetters.push(letter);
-                        displayWord();
-                    } else showNotification();
-                } else {
-                    if (!wrongLetters.includes(letter)) {
-                        wrongLetters.push(letter);
-                        updateWrongLetters();
-                    } else showNotification();
-                }
-            }
-        });
+        function setupKeyboard() {
+            const letters = 'abcdefghijklmnopqrstuvwxyz'.split('');
+            keyboard.innerHTML = letters
+                .map(letter => `<button class="key" id="${letter}">${letter}</button>`)
+                .join('');
+            document.querySelectorAll('.key').forEach(button => {
+                button.addEventListener('click', () => {
+                    const letter = button.innerText;
+                    button.classList.add('used');
+                    handleKeyPress({ key: letter });
+                });
+            });
+        }
 
         playButton.addEventListener('click', () => {
-            correctLetters.splice(0);
-            wrongLetters.splice(0);
-            selectedWord = words[Math.floor(Math.random() * words.length)];
-            displayWord();
-            updateWrongLetters();
-            popupContainer.classList.remove('active');
+            window.location.reload();
         });
 
+        window.addEventListener('keydown', handleKeyPress);
+
+        setupKeyboard();
         displayWord();
     </script>
 </body>
