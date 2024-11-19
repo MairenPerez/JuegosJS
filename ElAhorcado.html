@@ -221,6 +221,8 @@
     </div>
 
     <script>
+
+        // Variables 
         const words = ['programacion', 'romanticismo', 'backend', 'rocknroll', 'bateria', 'deportes'];
         let selectedWord = words[Math.floor(Math.random() * words.length)];
 
@@ -235,6 +237,7 @@
         const figureParts = document.querySelectorAll('.figure-part');
         const keyboard = document.getElementById('keyboard');
 
+        // Mostramos la palabra segun se vayan acertando las letras.
         function displayWord() {
             wordE1.innerHTML = selectedWord
                 .split('')
@@ -246,6 +249,7 @@
             }
         }
 
+        // Actualizamos las letras incorrectas y las mostramos en la parte superior del juego.
         function updateWrongLetters() {
             wrongLettersE1.innerHTML = wrongLetters.map(letter => `<span>${letter}</span>`).join('');
             figureParts.forEach((part, index) => {
@@ -259,6 +263,7 @@
             }
         }
 
+        // Evento para el teclado
         function handleKeyPress(event) {
             const letter = event.key.toLowerCase();
             if (correctLetters.includes(letter) || wrongLetters.includes(letter)) {
@@ -277,6 +282,7 @@
             }
         }
 
+        // Inicializamos el teclado y el juego cuando la página carga.
         function setupKeyboard() {
             const letters = 'abcdefghijklmnopqrstuvwxyz'.split('');
             keyboard.innerHTML = letters
@@ -297,6 +303,7 @@
 
         window.addEventListener('keydown', handleKeyPress);
 
+        // Iniciamos el juego
         setupKeyboard();
         displayWord();
     </script>
